@@ -23,10 +23,15 @@ $ pipenv install psycopg2
 ```
 
 
+## Deployment 
+```
+Using heroku
+```
 
 
 ## References
 
 ```
 https://github.com/CryceTruly/trulyexpensesyoutube
+Note:  # name in path url is to set for url in html and redirect_to
 ```

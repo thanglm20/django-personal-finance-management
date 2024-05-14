@@ -10,7 +10,6 @@
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet" />
     <link href="{% static 'css/main.css'%}" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/dashboard.css' %}" rel="stylesheet" />
@@ -29,7 +28,7 @@
           </span>
         </li>
 
-        {% comment %} <li class="nav-item text-nowrap mt-3 ml-2">
+        <li class="nav-item text-nowrap mt-3 ml-2">
           <form action="{% url  'logout' %}" method="POST">
             {% csrf_token %}
             <input
@@ -38,7 +37,7 @@
               value="Sign out"
             />
           </form>
-        </li> {% endcomment %}
+        </li>
       </ul>
     </nav>
 
@@ -68,6 +67,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-     <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
   </body>
 </html>
