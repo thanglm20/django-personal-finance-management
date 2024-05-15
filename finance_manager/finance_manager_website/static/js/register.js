@@ -39,13 +39,18 @@ emailField.addEventListener("keyup", (e) => {
           emailFeedBackArea.style.color = "green";
           emailFeedBackArea.innerHTML = `<p>This email is valid!</p>`;
         }
-        if (data.email_error) {
+        if (data.email_invalid || data.email_used) {
           submitBtn.disabled = true;
           emailField.classList.add("is-invalid");
           emailFeedBackArea.style.display = "block";
           emailFeedBackArea.style.color = "red";
-          emailFeedBackArea.innerHTML = `<p>${data.email_error}</p>`;
-        } else {
+          if(data.email_invalid)
+            emailFeedBackArea.innerHTML = `<p>${data.email_invalid}</p>`;
+          else if( data.email_used)
+            emailFeedBackArea.innerHTML = `<p>${data.email_used}</p>`;
+
+        }
+        else {
           submitBtn.removeAttribute("disabled");
         }
       });
@@ -76,7 +81,7 @@ usernameField.addEventListener("keyup", (e) => {
           feedBackArea.style.color = "green";
           feedBackArea.innerHTML = `<p>This username is valid!</p>`;
         }
-        else if (data.username_error) {
+        if (data.username_error) {
           usernameField.classList.add("is-invalid");
           feedBackArea.style.display = "block";
           feedBackArea.innerHTML = `<p>${data.username_error}</p>`;
