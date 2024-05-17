@@ -1,0 +1,101 @@
+{% extends 'base.html'%} 
+{% load static%}
+{% block content %}
+
+<div class="form-group">
+  &nbsp;
+</div>
+
+<div class="form-group">
+  <form class =>
+    {% include 'partials/_messages.html' %}
+  </form>
+</div>
+
+<div class="container mt-3">
+  <h5>Preferred Currency</h5>
+  <form action="{% url 'preferences'%}" method="post">
+    {% csrf_token %}
+    <div class="input-group">
+      <select name="currency" class="custom-select" id="inputGroupSelect04">
+        {% if user_preferences.currency%}
+        <option name="currency" selected value="{{user_preferences.currency}}"
+          >{{user_preferences.currency}}</option
+        >
+        {% endif %} 
+        {% for currency in currencies %}
+
+        <option name="currency" value="{{currency.name}} - {{currency.value}}"
+          >{{currency.name}} - {{currency.value}}
+        </option>
+
+        {% endfor %}
+      </select>
+      <div class="input-group-append">
+        <input class="btn btn-primary btn-sm" type="submit" value="Save" />
+      </div>
+    </div>
+  </form>
+</div>
+<hr />
+
+
+<div class="container mt-3">
+  <h5>Expense Category</h5>
+  <form action="{% url 'preferences'%}" method="post">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+      <input type="text" 
+          name="expense_category"
+          class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <input class="btn btn-primary btn-sm" type="submit" value="Add" />
+      </div>
+    </div>
+    <div class="row">
+      {% for category in categories %}
+      <div class="col-md-4">
+        <p>{{category.name}}
+        <a href="{% url 'preferences-delete_category' category.id %}"
+          type="submit" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+        </p>  
+      </div>
+      {% endfor %}
+  </div>
+  </form>
+</div>
+<hr />
+
+
+<div class="container mt-3">
+  <h5>Source Income</h5>
+  <form action="{% url 'preferences'%}" method="post">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+      <input type="text" 
+          name="source_income"
+          class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <input class="btn btn-primary btn-sm" type="submit" value="Add" />
+      </div>
+    </div>
+  </form>
+  <div class="row">
+      {% for src in sources %}
+      <div class="col-md-4">
+      <p> {{src.name}}
+        <a href="{% url 'preferences-delete_source' src.id%}"
+          type="submit" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </p>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+<hr />
+
+
+{% endblock %}

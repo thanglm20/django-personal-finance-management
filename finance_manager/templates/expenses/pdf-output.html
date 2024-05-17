@@ -1,0 +1,122 @@
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if pdf_title %}{{ pdf_title }}{% else %}Expense{% endif %}</title>
+    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet" />
+    <link href="{% static 'css/main.css'%}" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet" />
+    <style>
+        @font-face {
+            font-family: Roboto;
+            src: url('{% static 'fonts/Roboto-Regular.ttf' %}');
+        }
+
+        @font-face {
+            font-family: Roboto-bold;
+            src: url('{% static 'fonts/Roboto-Bold.ttf' %}');
+            font-weight: bold;
+        }
+
+        body {
+          background-color: white;
+          font-family: "Roboto", sans-serif;
+        }
+
+        .right{
+            font-size: 10px;
+            text-align: right;
+
+        }
+        .left{
+            text-align: left;
+        }
+
+        .invoice-number {
+            font-size: 18px;
+            font-family: "Roboto-bold", sans-serif;
+        }
+
+        .col-titles {
+            font-size: 16px;
+            text-decoration: underline;
+            font-family: "Roboto-bold", sans-serif;
+         }
+
+         .footer {
+            font-size: 8px;
+            text-align: center;
+         }
+
+         p{
+            font-size: 10px;
+            line-height: 0;
+         }
+
+         table {
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        td, td {
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        .summary{
+             border-bottom: 1px solid #ddd;
+        }
+
+        .signatures {
+            border-top: 1px solid black;
+            font-size: 8px;
+            text-align: center;
+        }
+
+        th {
+        height: 36px;
+
+        }
+        td {
+        height: 25px;
+        }
+        h1.headertekst {
+        text-align: center;
+        }
+      </style>
+</head>
+<body>
+    <div class="container">
+    <h1 class="headertekst"> Expenses List </h1>
+    <div class="table">
+        <table class="table table-hover">
+        <thead>
+            <tr>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses%}
+            <tr>
+            <td>{{expense.amount}}</td>
+            <td>{{expense.category}}</td>
+            <td>{{expense.description}}</td>
+            <td>{{expense.date}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+            <td>Total:  </td>
+            <td>{{total.amount__sum}} </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    </div>
+</body>
+</html>

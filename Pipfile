@@ -11,6 +11,9 @@ django-bootstrap-v5 = "*"
 django-tables2 = "*"
 six = "*"
 validate-email = "*"
+pip = "*"
+install = "*"
+xhtml2pdf = "*"
 
 [dev-packages]
 

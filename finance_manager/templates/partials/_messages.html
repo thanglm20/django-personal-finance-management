@@ -1,4 +1,4 @@
-{% if messages %}
+{% comment %} {% if messages %}
 <div class="messages">
     {% for message in messages %}
     <div{% if message.tags %} class="alert alert-sm alert-{{ message.tags }}"{% endif %}>
@@ -6,4 +6,12 @@
     </div>
     {% endfor %}
 </ul>
+{% endif %} {% endcomment %}
+
+{% if messages %}
+{% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
+        {{ message | safe }}
+    </div>
+{% endfor %}
 {% endif %}

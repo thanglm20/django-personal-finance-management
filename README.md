@@ -34,4 +34,5 @@ Using heroku
 ```
 https://github.com/CryceTruly/trulyexpensesyoutube
 Note:  # name in path url is to set for url in html and redirect_to
+For PDF exporting on Windows: https://doc.courtbouillon.org/weasyprint/stable/first_steps.html#windows and export  GTK3 path env
 ```

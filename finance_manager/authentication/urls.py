@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
      path('register', RegistrationView.as_view(), name="authen-register"), # name is to set for url in html
-     path('login', LoginView.as_view(), name="authen-login"),
+     path('', LoginView.as_view(), name="authen-login"),
      path('logout', LogoutView.as_view(), name="logout"),
      path('reset-password', ResetPassword.as_view(), name="authen-reset-password"),
      path('validate-username', csrf_exempt(UsernameValidationView.as_view()),

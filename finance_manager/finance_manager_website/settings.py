@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     'django_tables2',
     'tutorial',
     'authentication',
-    'expenses'  
+    'expenses',
+    'userincome',
+    'userpreferences',
+
 ]
 
 MIDDLEWARE = [
@@ -136,7 +139,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MESSAGE_TAGS = {
-    messages.ERROR: 'danger'
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
 }
 
 

@@ -39,7 +39,7 @@ const renderChart = (data, labels) => {
 
 const getChartData = () => {
   console.log("fetching");
-  fetch("/expense_category_summary")
+  fetch("/expenses/category_summary")
     .then((res) => res.json())
     .then((results) => {
       console.log("results", results);

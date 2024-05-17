@@ -6,12 +6,16 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 import json
-from django.http import JsonResponse
-# from userpreferences.models import UserPreference
+from django.http import JsonResponse, HttpResponse
+from userpreferences.models import UserPreference
 import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
-
+import csv
+from django.template.loader import render_to_string, get_template
+from django.db.models import  Sum
+from xhtml2pdf import pisa
+from io import BytesIO
 
 def search_expenses(request):
     if request.method == 'POST':
@@ -28,20 +32,18 @@ def search_expenses(request):
 # @csrf_exempt
 @login_required(login_url='/authen/login')
 def index(request):
-    # categories = Category.objects.all()
-    # # expenses = Expense.objects.filter(owner=request.user)
-    # expenses = Expense.objects.all()[0]
-    # paginator = Paginator(expenses, 5)
-    # page_number = request.GET.get('page')
-    # page_obj = Paginator.get_page(paginator, page_number)
-    # # currency = UserPreference.objects.get(user=request.user).currency
-    # currency = "VND"
-    # context = {
-    #     'expenses': expenses,
-    #     'page_obj': page_obj,
-    #     'currency': currency
-    # }
-    return render(request, 'expenses/index.html')
+    categories = Category.objects.all()
+    expenses = Expense.objects.filter(owner=request.user).order_by('-date')
+    paginator = Paginator(expenses, 5)
+    page_number = request.GET.get('page')
+    page_obj = Paginator.get_page(paginator, page_number)
+    currency = UserPreference.objects.get(user=request.user).currency
+    context = {
+        'expenses': expenses,
+        'page_obj': page_obj,
+        'currency': currency
+    }
+    return render(request, 'expenses/index.html', context)
 
 
 # @csrf_exempt
@@ -68,10 +70,7 @@ def add_expense(request):
         if not description:
             messages.error(request, 'description is required')
             return render(request, 'expenses/add_expense.html', context)
-        # user = User.objects.get(username="admin", password="admin")
-        user = auth.authenticate(username="admin", password="admin")
-        print("user :      ---------------- ", user)
-        Expense.objects.create(owner=user, amount=amount, date=date,
+        Expense.objects.create(owner=request.user, amount=amount, date=date,
                                category=category, description=description)
         
        
@@ -80,41 +79,41 @@ def add_expense(request):
         return redirect('expenses')
 
 
-# @login_required(login_url='/authentication/login')
-# def expense_edit(request, id):
-#     expense = Expense.objects.get(pk=id)
-#     categories = Category.objects.all()
-#     context = {
-#         'expense': expense,
-#         'values': expense,
-#         'categories': categories
-#     }
-#     if request.method == 'GET':
-#         return render(request, 'expenses/edit-expense.html', context)
-#     if request.method == 'POST':
-#         amount = request.POST['amount']
+@login_required(login_url='/authen/login')
+def edit_expense(request, id):
+    expense = Expense.objects.get(pk=id)
+    categories = Category.objects.all()
+    context = {
+        'expense': expense,
+        'values': expense,
+        'categories': categories
+    }
+    if request.method == 'GET':
+        return render(request, 'expenses/edit-expense.html', context)
+    if request.method == 'POST':
+        amount = request.POST['amount']
 
-#         if not amount:
-#             messages.error(request, 'Amount is required')
-#             return render(request, 'expenses/edit-expense.html', context)
-#         description = request.POST['description']
-#         date = request.POST['expense_date']
-#         category = request.POST['category']
+        if not amount:
+            messages.error(request, 'Amount is required')
+            return render(request, 'expenses/edit-expense.html', context)
+        description = request.POST['description']
+        date = request.POST['expense_date']
+        category = request.POST['category']
 
-#         if not description:
-#             messages.error(request, 'description is required')
-#             return render(request, 'expenses/edit-expense.html', context)
+        if not description:
+            messages.error(request, 'description is required')
+            return render(request, 'expenses/edit-expense.html', context)
 
-#         expense.owner = request.user
-#         expense.amount = amount
-#         expense. date = date
-#         expense.category = category
-#         expense.description = description
+        expense.owner = request.user
+        expense.amount = amount
+        expense. date = date
+        expense.category = category
+        expense.description = description
 
-#         expense.save()
-#         messages.success(request, 'Expense updated  successfully')
+        expense.save()
+        messages.success(request, 'Expense updated  successfully')
 
-#         return redirect('expenses')
+        return redirect('expenses')
 
 
 def delete_expense(request, id):
@@ -152,3 +151,41 @@ def expense_category_summary(request):
 
 def stats_view(request):
     return render(request, 'expenses/stats.html')
+
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=Expenses_' + \
+                                    str(datetime.datetime.now()) + '.csv'
+    writer = csv.writer(response)
+    writer.writerow(['Amount', 'Description', 'Category', 'Date'])
+
+    expenses = Expense.objects.filter(owner=request.user)
+
+    for expense in expenses:
+        writer.writerow([expense.amount, expense.description, expense.category, expense.date])
+
+    return response
+
+
+
+def html2pdf(template, context):
+    tpl = get_template(template)
+    html = tpl.render(context)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("cp1252")), result)
+    # pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+def export_pdf(request):
+    expenses = Expense.objects.filter(owner=request.user)
+    sum = expenses.aggregate(Sum('amount'))
+    print(sum)
+    context = {
+        'expenses': expenses,
+        'total': sum
+    }
+    pdf = html2pdf("expenses/pdf-output.html", context)    
+    return HttpResponse(pdf, content_type='application/pdf')
+    # return render(request, 'expenses/pdf-output.html', context)

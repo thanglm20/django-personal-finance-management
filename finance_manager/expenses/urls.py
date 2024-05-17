@@ -5,13 +5,12 @@ from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
      path('', views.index, name="expenses"),
-     path('add-expense', views.add_expense, name="add-expenses"),
-#     path('edit-expense/<int:id>', views.expense_edit, name="expense-edit"),
-#     path('expense-delete/<int:id>', views.delete_expense, name="expense-delete"),
-#     path('search-expenses', csrf_exempt(views.search_expenses),
-#          name="search_expenses"),
-#     path('expense_category_summary', views.expense_category_summary,
-#          name="expense_category_summary"),
-#     path('stats', views.stats_view,
-#          name="stats")
+     path('add', views.add_expense, name="expenses-add"),
+     path('edit/<int:id>', views.edit_expense, name="expenses-edit"),
+     path('delete/<int:id>', views.delete_expense, name="expenses-delete"),
+     path('search', csrf_exempt(views.search_expenses), name="expenses-search"),
+     path('category_summary', views.expense_category_summary, name="expenses-category_summary"),
+     path('stats', views.stats_view, name="expenses-stats"),
+     path('export_csv', views.export_csv, name="expenses-export_csv"),
+     path('export_pdf', views.export_pdf, name="expenses-export_pdf"),
 ]
