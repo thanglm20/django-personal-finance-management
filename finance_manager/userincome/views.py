@@ -24,11 +24,14 @@ def search_income(request):
 @login_required(login_url='/authentication/login')
 def index(request):
     categories = Source.objects.all()
-    income = UserIncome.objects.filter(owner=request.user)
+    income = UserIncome.objects.filter(owner=request.user).order_by('-date')
     paginator = Paginator(income, 5)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
-    currency = UserPreference.objects.get(user=request.user).currency
+    try:
+        currency = UserPreference.objects.get(user=request.user).currency
+    except UserPreference.DoesNotExist:
+        currency = ""
     context = {
         'income': income,
         'page_obj': page_obj,
